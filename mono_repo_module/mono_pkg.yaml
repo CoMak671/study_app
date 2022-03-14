@@ -4,4 +4,3 @@
 # an array. Alternatively, you can specify the SDK version(s) within each job.
 sdk:
 - 2.14.0
-- dev
