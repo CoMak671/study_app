@@ -4,3 +4,9 @@
 # an array. Alternatively, you can specify the SDK version(s) within each job.
 sdk:
   - stable
+
+stages:
+  - analyzer_and_format:
+    - group:
+      - format
+      - analyze: --fatal-infos .

@@ -16,34 +16,6 @@ env:
 
 jobs:
   job_001:
-    name: "unit_test; PKG: mono_repo_module; `flutter test`"
-    runs-on: ubuntu-latest
-    steps:
-      - name: Cache Pub hosted dependencies
-        uses: actions/cache@v2.1.7
-        with:
-          path: "~/.pub-cache/hosted"
-          key: "os:ubuntu-latest;pub-cache-hosted;sdk:stable;packages:mono_repo_module;commands:test"
-          restore-keys: |
-            os:ubuntu-latest;pub-cache-hosted;sdk:stable;packages:mono_repo_module
-            os:ubuntu-latest;pub-cache-hosted;sdk:stable
-            os:ubuntu-latest;pub-cache-hosted
-            os:ubuntu-latest
-      - uses: subosito/flutter-action@v2.3.0
-        with:
-          channel: stable
-      - id: checkout
-        uses: actions/checkout@v3.0.0
-      - id: mono_repo_module_pub_upgrade
-        name: mono_repo_module; flutter pub pub upgrade
-        if: "always() && steps.checkout.conclusion == 'success'"
-        working-directory: mono_repo_module
-        run: flutter pub pub upgrade
-      - name: mono_repo_module; flutter test
-        if: "always() && steps.mono_repo_module_pub_upgrade.conclusion == 'success'"
-        working-directory: mono_repo_module
-        run: flutter test
-  job_002:
     name: "unit_test; PKG: mono_repo_package; `flutter test`"
     runs-on: ubuntu-latest
     steps:
@@ -71,3 +43,37 @@ jobs:
         if: "always() && steps.mono_repo_package_pub_upgrade.conclusion == 'success'"
         working-directory: mono_repo_package
         run: flutter test
+  job_002:
+    name: "analyzer_and_format; PKG: mono_repo_module; `dart format --output=none --set-exit-if-changed .`, `dart analyze --fatal-infos .`"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cache Pub hosted dependencies
+        uses: actions/cache@v2.1.7
+        with:
+          path: "~/.pub-cache/hosted"
+          key: "os:ubuntu-latest;pub-cache-hosted;sdk:stable;packages:mono_repo_module;commands:format-analyze"
+          restore-keys: |
+            os:ubuntu-latest;pub-cache-hosted;sdk:stable;packages:mono_repo_module
+            os:ubuntu-latest;pub-cache-hosted;sdk:stable
+            os:ubuntu-latest;pub-cache-hosted
+            os:ubuntu-latest
+      - uses: subosito/flutter-action@v2.3.0
+        with:
+          channel: stable
+      - id: checkout
+        uses: actions/checkout@v3.0.0
+      - id: mono_repo_module_pub_upgrade
+        name: mono_repo_module; flutter pub pub upgrade
+        if: "always() && steps.checkout.conclusion == 'success'"
+        working-directory: mono_repo_module
+        run: flutter pub pub upgrade
+      - name: "mono_repo_module; dart format --output=none --set-exit-if-changed ."
+        if: "always() && steps.mono_repo_module_pub_upgrade.conclusion == 'success'"
+        working-directory: mono_repo_module
+        run: "dart format --output=none --set-exit-if-changed ."
+      - name: "mono_repo_module; dart analyze --fatal-infos ."
+        if: "always() && steps.mono_repo_module_pub_upgrade.conclusion == 'success'"
+        working-directory: mono_repo_module
+        run: dart analyze --fatal-infos .
+    needs:
+      - job_001
