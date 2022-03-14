@@ -31,7 +31,7 @@ jobs:
             os:ubuntu-latest
       - uses: subosito/flutter-action@v2.3.0
         with:
-          channel: "2.14.0"
+          sdk: "2.14.0"
       - id: checkout
         uses: actions/checkout@v3.0.0
       - id: mono_repo_module_pub_upgrade
@@ -59,7 +59,7 @@ jobs:
             os:ubuntu-latest
       - uses: subosito/flutter-action@v2.3.0
         with:
-          channel: "2.14.0"
+          sdk: "2.14.0"
       - id: checkout
         uses: actions/checkout@v3.0.0
       - id: mono_repo_package_pub_upgrade
