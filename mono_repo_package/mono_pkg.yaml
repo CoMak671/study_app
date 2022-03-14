@@ -5,8 +5,8 @@
 sdk:
   - stable
 
-stages:
-  - analyzer_and_format:
-      - group:
-          - format
-          - analyze: --fatal-infos .
+#stages:
+#  - analyzer_and_format:
+#      - group:
+#          - format
+#          - analyze: --fatal-infos .
