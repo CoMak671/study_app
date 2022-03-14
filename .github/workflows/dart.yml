@@ -23,15 +23,15 @@ jobs:
         uses: actions/cache@v2.1.7
         with:
           path: "~/.pub-cache/hosted"
-          key: "os:ubuntu-latest;pub-cache-hosted;sdk:2.14.0;packages:mono_repo_module;commands:test"
+          key: "os:ubuntu-latest;pub-cache-hosted;sdk:stable;packages:mono_repo_module;commands:test"
           restore-keys: |
-            os:ubuntu-latest;pub-cache-hosted;sdk:2.14.0;packages:mono_repo_module
-            os:ubuntu-latest;pub-cache-hosted;sdk:2.14.0
+            os:ubuntu-latest;pub-cache-hosted;sdk:stable;packages:mono_repo_module
+            os:ubuntu-latest;pub-cache-hosted;sdk:stable
             os:ubuntu-latest;pub-cache-hosted
             os:ubuntu-latest
       - uses: subosito/flutter-action@v2.3.0
         with:
-          sdk: "2.14.0"
+          channel: stable
       - id: checkout
         uses: actions/checkout@v3.0.0
       - id: mono_repo_module_pub_upgrade
@@ -51,15 +51,15 @@ jobs:
         uses: actions/cache@v2.1.7
         with:
           path: "~/.pub-cache/hosted"
-          key: "os:ubuntu-latest;pub-cache-hosted;sdk:2.14.0;packages:mono_repo_package;commands:test"
+          key: "os:ubuntu-latest;pub-cache-hosted;sdk:stable;packages:mono_repo_package;commands:test"
           restore-keys: |
-            os:ubuntu-latest;pub-cache-hosted;sdk:2.14.0;packages:mono_repo_package
-            os:ubuntu-latest;pub-cache-hosted;sdk:2.14.0
+            os:ubuntu-latest;pub-cache-hosted;sdk:stable;packages:mono_repo_package
+            os:ubuntu-latest;pub-cache-hosted;sdk:stable
             os:ubuntu-latest;pub-cache-hosted
             os:ubuntu-latest
       - uses: subosito/flutter-action@v2.3.0
         with:
-          sdk: "2.14.0"
+          channel: stable
       - id: checkout
         uses: actions/checkout@v3.0.0
       - id: mono_repo_package_pub_upgrade
