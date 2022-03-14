@@ -1,0 +1,106 @@
+# Created with package:mono_repo v6.1.0
+name: Dart CI
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+defaults:
+  run:
+    shell: bash
+env:
+  PUB_ENVIRONMENT: bot.github
+
+jobs:
+  job_001:
+    name: "unit_test; PKG: mono_repo_demo_package_one; `flutter test`"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cache Pub hosted dependencies
+        uses: actions/cache@v2.1.7
+        with:
+          path: "~/.pub-cache/hosted"
+          key: "os:ubuntu-latest;pub-cache-hosted;sdk:2.14.0;packages:mono_repo_demo_package_one;commands:test"
+          restore-keys: |
+            os:ubuntu-latest;pub-cache-hosted;sdk:2.14.0;packages:mono_repo_demo_package_one
+            os:ubuntu-latest;pub-cache-hosted;sdk:2.14.0
+            os:ubuntu-latest;pub-cache-hosted
+            os:ubuntu-latest
+      - uses: subosito/flutter-action@v2.3.0
+        with:
+          channel: "2.14.0"
+      - id: checkout
+        uses: actions/checkout@v3.0.0
+      - id: mono_repo_demo_package_one_pub_upgrade
+        name: mono_repo_demo_package_one; flutter pub pub upgrade
+        if: "always() && steps.checkout.conclusion == 'success'"
+        working-directory: mono_repo_demo_package_one
+        run: flutter pub pub upgrade
+      - name: mono_repo_demo_package_one; flutter test
+        if: "always() && steps.mono_repo_demo_package_one_pub_upgrade.conclusion == 'success'"
+        working-directory: mono_repo_demo_package_one
+        run: flutter test
+  job_002:
+    name: "unit_test; PKG: mono_repo_demo_package_two; `flutter test`"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cache Pub hosted dependencies
+        uses: actions/cache@v2.1.7
+        with:
+          path: "~/.pub-cache/hosted"
+          key: "os:ubuntu-latest;pub-cache-hosted;sdk:2.14.0;packages:mono_repo_demo_package_two;commands:test"
+          restore-keys: |
+            os:ubuntu-latest;pub-cache-hosted;sdk:2.14.0;packages:mono_repo_demo_package_two
+            os:ubuntu-latest;pub-cache-hosted;sdk:2.14.0
+            os:ubuntu-latest;pub-cache-hosted
+            os:ubuntu-latest
+      - uses: subosito/flutter-action@v2.3.0
+        with:
+          channel: "2.14.0"
+      - id: checkout
+        uses: actions/checkout@v3.0.0
+      - id: mono_repo_demo_package_two_pub_upgrade
+        name: mono_repo_demo_package_two; flutter pub pub upgrade
+        if: "always() && steps.checkout.conclusion == 'success'"
+        working-directory: mono_repo_demo_package_two
+        run: flutter pub pub upgrade
+      - name: mono_repo_demo_package_two; flutter test
+        if: "always() && steps.mono_repo_demo_package_two_pub_upgrade.conclusion == 'success'"
+        working-directory: mono_repo_demo_package_two
+        run: flutter test
+  job_003:
+    name: "analyzer_and_format; PKG: mono_repo_demo_module_one; `dart format --output=none --set-exit-if-changed .`, `dart analyze`"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cache Pub hosted dependencies
+        uses: actions/cache@v2.1.7
+        with:
+          path: "~/.pub-cache/hosted"
+          key: "os:ubuntu-latest;pub-cache-hosted;sdk:2.14.0;packages:mono_repo_demo_module_one;commands:format-analyze"
+          restore-keys: |
+            os:ubuntu-latest;pub-cache-hosted;sdk:2.14.0;packages:mono_repo_demo_module_one
+            os:ubuntu-latest;pub-cache-hosted;sdk:2.14.0
+            os:ubuntu-latest;pub-cache-hosted
+            os:ubuntu-latest
+      - uses: subosito/flutter-action@v2.3.0
+        with:
+          channel: "2.14.0"
+      - id: checkout
+        uses: actions/checkout@v3.0.0
+      - id: mono_repo_demo_module_one_pub_upgrade
+        name: mono_repo_demo_module_one; flutter pub pub upgrade
+        if: "always() && steps.checkout.conclusion == 'success'"
+        working-directory: mono_repo_demo_module_one
+        run: flutter pub pub upgrade
+      - name: "mono_repo_demo_module_one; dart format --output=none --set-exit-if-changed ."
+        if: "always() && steps.mono_repo_demo_module_one_pub_upgrade.conclusion == 'success'"
+        working-directory: mono_repo_demo_module_one
+        run: "dart format --output=none --set-exit-if-changed ."
+      - name: mono_repo_demo_module_one; dart analyze
+        if: "always() && steps.mono_repo_demo_module_one_pub_upgrade.conclusion == 'success'"
+        working-directory: mono_repo_demo_module_one
+        run: dart analyze
+    needs:
+      - job_001
+      - job_002
